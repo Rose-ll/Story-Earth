@@ -74,14 +74,13 @@ export default {
       }
       
       //接口
-      var url = "http://localhost:8080/api/Login/Login";
       let params = {
         username: _this.ruleForm.userName,
         password: _this.ruleForm.password
       };
       _this.$axios({
           methods: "get",
-          url: Configuration.BackstageServer + "/api/Login/Login",
+          url: Configuration.BackstageServer + "api/Login/Login",
           params: params
         })
         .then(res => {
@@ -89,7 +88,7 @@ export default {
             _this.$message.success("登陆成功！");
             _this.$router.push({ path: "/" });
             //判断复选框是否被勾选 勾选则调用配置cookie方法
-            Cookie.setCookie(res.data.data.id, res.data.data.name, 7);
+            Cookie.setCookie(res.data.data.id, res.data.data.name, 1);
           } else {
             alert("用户名或密码错误,请重新输入");
             _this.ruleForm.userName = "";

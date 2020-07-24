@@ -4,6 +4,7 @@
     <hheader></hheader>
     <navmenu></navmenu>
     <xdialog mycontent="mydialog1" v-show="dialogVisible"></xdialog>
+    <Profile></Profile>
   </dir>
 </template>
 
@@ -13,6 +14,7 @@ import hheader from "./Header/Header";
 import navmenu from "./CenterCon/NavMenu";
 import xdialog from "./Base/XDialog"
 import {Cookie} from './cookie';
+import Profile from './Profile'
 export default {
   data(){
     return{
@@ -29,7 +31,8 @@ export default {
     mmap,
     hheader,
     navmenu,
-    xdialog
+    xdialog,
+    Profile
   }
 };
 </script>

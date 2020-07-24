@@ -2,19 +2,11 @@
   <div id="header_wrap">
     <span class="left_con" @click="changeColor" :class="{openColor:isOpenColor}">我的足迹</span>
     <div class="logins">
-      <el-dropdown trigger="click">
-        <span class="el-dropdown-link">
-          个人中心
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>修改用户信息</el-dropdown-item>
-          <el-dropdown-item>修改头像</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+        <span class="el-dropdown-link"  @click="openProfile">个人中心</span>
       <el-upload
         class="avatar-uploader"
-        action="#"
+        :action="uploadAvatar"
+        :data="uploadParam"
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload"
@@ -32,13 +24,17 @@ import { Cookie } from "../cookie";
 export default {
   data() {
     return {
-      isOpenColor:false,
+      isOpenColor: false,
       imageUrl: "",
-      loginname: "游客"
+      loginname: "小可爱",
+      uploadParam: {
+        userid: null
+      },
+      uploadAvatar: Configuration.BackstageServer + "api/User/UploadAvatar"
     };
   },
   methods: {
-    changeColor(){
+    changeColor() {
       this.isOpenColor = !this.isOpenColor;
     },
     logout() {
@@ -46,7 +42,9 @@ export default {
       this.$router.push("/login");
     },
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+      if (res.success && res.data) {
+        this.imageUrl = Configuration.BackstageServer + res.data;
+      }
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -60,18 +58,21 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isPNG && isLt2M;
+    },
+    openProfile(){
+      this.$router.push("/Profile")
     }
   },
   mounted() {
     var userinfo = Cookie.getCookie();
     if (userinfo.name) {
       this.loginname = userinfo.name;
+      this.uploadParam.userid = userinfo.userId;
     }
   }
 };
 </script>
 <style>
-
 #header_wrap {
   width: 100%;
   height: 3.75rem;
@@ -89,7 +90,7 @@ export default {
   float: left;
   cursor: pointer;
 }
-#header_wrap .openColor{
+#header_wrap .openColor {
   color: orange !important;
 }
 #header_wrap .logins {
@@ -147,12 +148,9 @@ export default {
 #header_wrap .el-dropdown-link {
   cursor: pointer;
   color: #409eff;
-}
-#header_wrap .el-icon-arrow-down {
-  font-size: 12px;
-}
-#header_wrap .el-dropdown{
+  font-size: 14px;
   position: relative;
   top: -0.3125rem;
+  margin-right: .625rem;
 }
 </style>
